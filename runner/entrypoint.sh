@@ -125,6 +125,4 @@ while true; do
         exit ${EXIT_CODE}
     fi
 done
-
-
-
+fi
