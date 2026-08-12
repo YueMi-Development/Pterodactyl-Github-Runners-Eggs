@@ -1,0 +1,82 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-08-12T19:07:00+07:00",
+    "name": "Github Runners",
+    "author": "monci@yuemi.org",
+    "description": "Self Hosted Github Runners",
+    "features": [],
+    "docker_images": {
+        "Latest": "ghcr.io/yuemi-development/pterodactyl-github-runners-eggs:main"
+    },
+    "file_denylist": [],
+    "startup": "./pterodactyl-entrypoint.sh",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"Listening for Jobs\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": null,
+            "container": "alpine:3.4",
+            "entrypoint": "ash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Runner Name",
+            "description": "The name of the runner to register in GitHub.",
+            "env_variable": "RUNNER_NAME",
+            "default_value": "pterodactyl-runner",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:64",
+            "field_type": "text"
+        },
+        {
+            "name": "GitHub Access Token",
+            "description": "GitHub Personal Access Token (PAT) with repo/admin:org scopes, or a runner registration token.",
+            "env_variable": "ACCESS_TOKEN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "GitHub Repository URL",
+            "description": "URL if setting up a repository-level runner (e.g. https://github.com/owner/repo). Leave empty if setting up an Org runner.",
+            "env_variable": "RUNNER_REPOSITORY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "GitHub Organization URL",
+            "description": "URL if setting up an organization-level runner (e.g. https://github.com/org). Leave empty if setting up a Repository runner.",
+            "env_variable": "RUNNER_ORGANIZATION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Runner Labels",
+            "description": "Comma-separated list of labels for the runner (e.g. self-hosted,linux,x64).",
+            "env_variable": "LABELS",
+            "default_value": "self-hosted,linux",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        }
+    ]
+}
