@@ -78,6 +78,16 @@
             "user_editable": true,
             "rules": "nullable|string",
             "field_type": "text"
+        },
+        {
+            "name": "Ephemeral Runner",
+            "description": "If enabled, the runner will run exactly one job, automatically unregister itself, and stop. Enable Pterodactyl Auto-Restart to automatically spawn a fresh runner for the next job.",
+            "env_variable": "EPHEMERAL",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
         }
     ]
 }
