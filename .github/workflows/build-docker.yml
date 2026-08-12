@@ -93,3 +93,26 @@ jobs:
           else
             echo "No changes in egg-github-runners.json to commit."
           fi
+
+  create-release:
+    needs: update-egg
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main # Pull the updated egg file from main branch
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: egg-github-runners.json
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
