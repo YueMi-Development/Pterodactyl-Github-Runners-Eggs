@@ -59,10 +59,26 @@ if [ ! -f ".runner" ]; then
         --replace
 fi
 
-# Clean up registration token variable for security
-unset REG_TOKEN ACCESS_TOKEN
-
 # Start the runner
 echo "Starting GitHub Actions Runner..."
-exec ./run.sh
+START_TIME=$(date +%s)
+
+# Run the runner and catch exit status
+set +e
+./run.sh
+EXIT_CODE=$?
+set -e
+
+END_TIME=$(date +%s)
+DURATION=$((END_TIME - START_TIME))
+
+# If the runner exited in less than 15 seconds, configuration is likely invalid/deleted
+if [ ${DURATION} -lt 15 ]; then
+    echo "ERROR: Runner exited too quickly (${DURATION} seconds)."
+    echo "Clearing local runner configuration to force a clean re-registration on next start..."
+    rm -f .runner .credentials .credentials_rsaparams .path .env
+fi
+
+exit ${EXIT_CODE}
+
 
