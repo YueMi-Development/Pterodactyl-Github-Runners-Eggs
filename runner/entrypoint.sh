@@ -34,6 +34,15 @@ fi
 
 # Obtain registration token if runner is not configured yet
 if [ ! -f ".runner" ]; then
+    if [ -z "${ACCESS_TOKEN}" ]; then
+        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        echo "ERROR: GitHub Access Token (ACCESS_TOKEN) is not set."
+        echo "Please set your Personal Access Token (PAT) in Pterodactyl"
+        echo "Panel under the Startup settings to register the runner."
+        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        exit 1
+    fi
+
     echo "Obtaining runner registration token from GitHub..."
     
     RESPONSE=$(curl -sX POST \
