@@ -4,13 +4,14 @@
         "version": "PTDL_v2",
         "update_url": "https://raw.githubusercontent.com/YueMi-Development/Pterodactyl-Github-Runners-Eggs/main/egg-github-runners.json"
     },
-    "exported_at": "2026-08-12T12:38:32.376Z",
+    "exported_at": "2026-08-13T03:59:14.057Z",
     "name": "Github Runners",
     "author": "monci@yuemi.org",
     "description": "Self Hosted Github Runners",
     "features": [],
     "docker_images": {
         "Latest": "ghcr.io/yuemi-development/pterodactyl-github-runners-eggs:main",
+        "v1.1.0": "ghcr.io/yuemi-development/pterodactyl-github-runners-eggs:v1.1.0",
         "v1.0.0": "ghcr.io/yuemi-development/pterodactyl-github-runners-eggs:v1.0.0"
     },
     "file_denylist": [],
