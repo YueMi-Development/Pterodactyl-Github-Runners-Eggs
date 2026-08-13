@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# Handle shutdown signals from Pterodactyl gracefully
+trap 'echo "Stopping runner..."; exit 0' SIGINT SIGTERM
+
+
 # Define directories
 RUNNER_DIR="/home/container/actions-runner"
 export HOME="/home/container"
