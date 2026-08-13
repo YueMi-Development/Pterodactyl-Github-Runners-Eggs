@@ -25,6 +25,22 @@ fi
 export RUNNER_NAME="${RUNNER_NAME:-pterodactyl-runner}"
 export RUNNER_WORK_DIR="${RUNNER_WORK_DIR:-_work}"
 
+# Set tool cache locations to writable paths
+export RUNNER_TOOL_CACHE="${HOME}/.cache"
+export RUNNER_TEMP="${HOME}/tmp"
+mkdir -p "${RUNNER_TOOL_CACHE}" "${RUNNER_TEMP}"
+
+# Provide a dummy sudo that just runs the command (no privileges needed)
+if ! command -v sudo >/dev/null 2>&1; then
+  mkdir -p "${HOME}/bin"
+  cat <<'EOS' > "${HOME}/bin/sudo"
+#!/usr/bin/env bash
+exec "$@"
+EOS
+  chmod +x "${HOME}/bin/sudo"
+  export PATH="${HOME}/bin:$PATH"
+fi
+
 # Determine runner scope and target URL
 if [ -n "${RUNNER_REPOSITORY}" ]; then
     REG_URL="https://api.github.com/repos/${RUNNER_REPOSITORY#https://github.com/}/actions/runners/registration-token"
