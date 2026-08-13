@@ -15,8 +15,8 @@ RUN         chmod +x /pterodactyl-entrypoint.sh
 
 # Replace the system's real sudo binary with a dummy wrapper
 # This fixes "sudo: effective uid is not 0" errors when actions call /usr/bin/sudo directly
-RUN         mv /usr/bin/sudo /usr/bin/sudo.real || true && \
-            echo -e '#!/usr/bin/env bash\nexec "$@"' > /usr/bin/sudo && \
-            chmod +x /usr/bin/sudo
+RUN         mv /usr/bin/sudo /usr/bin/sudo.real || true
+COPY        ./libs/sudo-wrapper.sh /usr/bin/sudo
+RUN         chmod +x /usr/bin/sudo
 
 ENTRYPOINT  ["/usr/bin/dumb-init", "--", "/pterodactyl-entrypoint.sh"]
