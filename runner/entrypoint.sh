@@ -34,6 +34,21 @@ export RUNNER_TOOL_CACHE="${HOME}/.cache"
 export RUNNER_TEMP="${HOME}/tmp"
 mkdir -p "${RUNNER_TOOL_CACHE}" "${RUNNER_TEMP}"
 
+# Ensure the symlink redirect targets (created at build time in the Dockerfile)
+# always exist on the writable volume before any action writes to them.
+mkdir -p \
+    "${HOME}/run/php" \
+    "${HOME}/etc/php" \
+    "${HOME}/var/lib/php" \
+    "${HOME}/var/lib/apt" \
+    "${HOME}/var/cache/apt" \
+    "${HOME}/var/lib/dpkg" \
+    "${HOME}/etc/apt" \
+    "${HOME}/usr/local/bin" \
+    "${HOME}/usr/local/lib" \
+    "${HOME}/usr/local/share" \
+    "${HOME}/opt"
+
 # Determine runner scope and target URL
 if [ -n "${RUNNER_REPOSITORY}" ]; then
     REG_URL="https://api.github.com/repos/${RUNNER_REPOSITORY#https://github.com/}/actions/runners/registration-token"

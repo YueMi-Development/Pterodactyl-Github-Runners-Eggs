@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-for arg in "$@"; do
-  if [[ "$arg" == "/run/"* ]]; then
-    echo "Mocking command for read-only path: $*"
-    exit 0
-  fi
-done
+# Pterodactyl runs containers with `no-new-privileges` and a read-only root
+# filesystem, so a real sudo binary cannot elevate privileges. System write
+# paths are instead symlinked into the writable /home/container volume at build
+# time (see Dockerfile). Run the command directly as the current user; do not
+# silently mock or swallow failures.
 exec "$@"
