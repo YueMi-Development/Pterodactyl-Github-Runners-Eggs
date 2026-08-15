@@ -89,6 +89,16 @@
             "user_editable": true,
             "rules": "required|boolean",
             "field_type": "text"
+        },
+        {
+            "name": "Runner Debug Logging",
+            "description": "Enable GitHub Actions step debug logging (ACTIONS_STEP_DEBUG) so actions like setup-php/setup-node print full traces instead of generic errors. Set to true when diagnosing a failing action.",
+            "env_variable": "ACTIONS_STEP_DEBUG",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
         }
     ]
 }

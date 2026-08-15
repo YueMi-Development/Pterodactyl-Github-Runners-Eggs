@@ -29,6 +29,11 @@ fi
 export RUNNER_NAME="${RUNNER_NAME:-pterodactyl-runner}"
 export RUNNER_WORK_DIR="${RUNNER_WORK_DIR:-_work}"
 
+# Forward GitHub Actions step debug logging so actions (setup-php, setup-node,
+# etc.) print full traces instead of generic errors. Toggleable via the Egg's
+# "Runner Debug Logging" variable (ACTIONS_STEP_DEBUG), default off.
+export ACTIONS_STEP_DEBUG="${ACTIONS_STEP_DEBUG:-false}"
+
 # Set tool cache and temp locations to writable paths.
 # IMPORTANT: RUNNER_TOOL_CACHE must match AGENT_TOOLSDIRECTORY (set to
 # /opt/hostedtoolcache in the base image) or the setup-* actions will add the
