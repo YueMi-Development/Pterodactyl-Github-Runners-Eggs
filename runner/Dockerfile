@@ -23,6 +23,7 @@ RUN         set -eux; \
                 "$ROOT/var/lib" \
                 "$ROOT/var/cache" \
                 "$ROOT/usr/local" \
+                "$ROOT/usr" \
                 "$ROOT/opt"; \
             # --- /run/php ---
             mkdir -p "$ROOT/run/php"; \
@@ -42,6 +43,12 @@ RUN         set -eux; \
                 fi; \
                 ln -sfn "$ROOT/usr/local/$d" "/usr/local/$d"; \
             done; \
+            # NOTE: /usr/lib and /usr/share are deliberately NOT redirected.
+            # They contain the shared libraries and data that the shell and
+            # every dynamically-linked binary (including ln/cp) depend on, so
+            # deleting them would break the very tools running this script.
+            # apt-installed extension deps are handled via LD_LIBRARY_PATH at
+            # runtime instead (see entrypoint.sh).
             # --- apt / dpkg (preserve existing content) ---
             for d in /var/lib/apt /var/cache/apt /var/lib/dpkg /etc/apt; do \
                 name=$(basename "$d"); \
@@ -59,6 +66,8 @@ RUN         set -eux; \
                 rm -rf /opt; \
             fi; \
             ln -sfn "$ROOT/opt" /opt; \
+            # ensure the canonical tool cache location exists and is writable
+            mkdir -p "$ROOT/opt/hostedtoolcache"; \
             # ensure everything is owned by the container user
             chown -R container:container "$ROOT"
 

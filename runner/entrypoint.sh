@@ -29,8 +29,12 @@ fi
 export RUNNER_NAME="${RUNNER_NAME:-pterodactyl-runner}"
 export RUNNER_WORK_DIR="${RUNNER_WORK_DIR:-_work}"
 
-# Set tool cache locations to writable paths
-export RUNNER_TOOL_CACHE="${HOME}/.cache"
+# Set tool cache and temp locations to writable paths.
+# IMPORTANT: RUNNER_TOOL_CACHE must match AGENT_TOOLSDIRECTORY (set to
+# /opt/hostedtoolcache in the base image) or the setup-* actions will add the
+# wrong bin dir to PATH and tools (yarn, php, etc.) won't be found.
+# /opt is symlinked to /home/container/opt at build time, so it is writable.
+export RUNNER_TOOL_CACHE="${AGENT_TOOLSDIRECTORY:-/opt/hostedtoolcache}"
 export RUNNER_TEMP="${HOME}/tmp"
 mkdir -p "${RUNNER_TOOL_CACHE}" "${RUNNER_TEMP}"
 
@@ -47,7 +51,7 @@ mkdir -p \
     "${HOME}/usr/local/bin" \
     "${HOME}/usr/local/lib" \
     "${HOME}/usr/local/share" \
-    "${HOME}/opt"
+    "${HOME}/opt/hostedtoolcache"
 
 # Determine runner scope and target URL
 if [ -n "${RUNNER_REPOSITORY}" ]; then
