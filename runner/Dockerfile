@@ -9,68 +9,6 @@ USER        root
 # Create the container user to align with Pterodactyl's permission requirements
 RUN         useradd -d /home/container -m container
 
-# Pterodactyl runs the container with a read-only root filesystem and
-# `no-new-privileges`, so no action (or sudo) can write to system paths at
-# runtime. Redirect the standard system write locations into the writable
-# /home/container volume via symlinks. Any existing base-image content is
-# preserved by copying it into the target first.
-RUN         set -eux; \
-            ROOT=/home/container; \
-            # mkdir -p all target parents first
-            mkdir -p \
-                "$ROOT/run" \
-                "$ROOT/etc" \
-                "$ROOT/var/lib" \
-                "$ROOT/var/cache" \
-                "$ROOT/usr/local" \
-                "$ROOT/usr" \
-                "$ROOT/opt"; \
-            # --- /run/php ---
-            mkdir -p "$ROOT/run/php"; \
-            ln -sfn "$ROOT/run/php" /run/php; \
-            # --- /etc/php ---
-            mkdir -p "$ROOT/etc/php"; \
-            ln -sfn "$ROOT/etc/php" /etc/php; \
-            # --- /var/lib/php ---
-            mkdir -p "$ROOT/var/lib/php"; \
-            ln -sfn "$ROOT/var/lib/php" /var/lib/php; \
-            # --- /usr/local/* (preserve existing content) ---
-            for d in bin lib share; do \
-                if [ -d "/usr/local/$d" ]; then \
-                    mkdir -p "$ROOT/usr/local/$d"; \
-                    cp -a "/usr/local/$d/." "$ROOT/usr/local/$d/"; \
-                    rm -rf "/usr/local/$d"; \
-                fi; \
-                ln -sfn "$ROOT/usr/local/$d" "/usr/local/$d"; \
-            done; \
-            # NOTE: /usr/lib and /usr/share are deliberately NOT redirected.
-            # They contain the shared libraries and data that the shell and
-            # every dynamically-linked binary (including ln/cp) depend on, so
-            # deleting them would break the very tools running this script.
-            # apt-installed extension deps are handled via LD_LIBRARY_PATH at
-            # runtime instead (see entrypoint.sh).
-            # --- apt / dpkg (preserve existing content) ---
-            for d in /var/lib/apt /var/cache/apt /var/lib/dpkg /etc/apt; do \
-                name=$(basename "$d"); \
-                if [ -e "$d" ]; then \
-                    mkdir -p "$ROOT$d"; \
-                    cp -a "$d/." "$ROOT$d/"; \
-                    rm -rf "$d"; \
-                fi; \
-                mkdir -p "$ROOT$d"; \
-                ln -sfn "$ROOT$d" "$d"; \
-            done; \
-            # --- /opt (preserve existing content) ---
-            if [ -e /opt ]; then \
-                cp -a /opt/. "$ROOT/opt/"; \
-                rm -rf /opt; \
-            fi; \
-            ln -sfn "$ROOT/opt" /opt; \
-            # ensure the canonical tool cache location exists and is writable
-            mkdir -p "$ROOT/opt/hostedtoolcache"; \
-            # ensure everything is owned by the container user
-            chown -R container:container "$ROOT"
-
 # Copy our custom entrypoint wrapper and helper scripts
 COPY        ./entrypoint.sh /pterodactyl-entrypoint.sh
 COPY        ./libs/cleanup.sh /pterodactyl-cleanup.sh
