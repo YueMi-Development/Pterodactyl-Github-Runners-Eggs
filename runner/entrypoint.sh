@@ -150,6 +150,7 @@ while true; do
 
     # If in ephemeral mode, clean up after the job exits
     if [ "${EPHEMERAL}" = "1" ] || [ "${EPHEMERAL}" = "true" ]; then
+        source /pterodactyl-cleanup.sh
         echo "Ephemeral job completed. Waiting 3 seconds before spawning next runner..."
         sleep 3
     else

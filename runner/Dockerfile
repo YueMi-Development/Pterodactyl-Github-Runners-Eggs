@@ -71,9 +71,10 @@ RUN         set -eux; \
             # ensure everything is owned by the container user
             chown -R container:container "$ROOT"
 
-# Copy our custom entrypoint wrapper
+# Copy our custom entrypoint wrapper and helper scripts
 COPY        ./entrypoint.sh /pterodactyl-entrypoint.sh
-RUN         chmod +x /pterodactyl-entrypoint.sh
+COPY        ./libs/cleanup.sh /pterodactyl-cleanup.sh
+RUN         chmod +x /pterodactyl-entrypoint.sh /pterodactyl-cleanup.sh
 
 # Replace the system's real sudo binary with a dummy wrapper
 # This fixes "sudo: effective uid is not 0" errors when actions call /usr/bin/sudo directly
